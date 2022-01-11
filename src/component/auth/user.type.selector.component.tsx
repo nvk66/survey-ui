@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import SchoolIcon from '@mui/icons-material/School';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -14,8 +15,17 @@ import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import CopyrightComponent from "../common/copyright.component";
 import {useHistory} from "react-router-dom";
-import {FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, SelectChangeEvent} from "@mui/material";
-import {ChangeEvent, useState} from "react";
+import {
+    Autocomplete, createFilterOptions,
+    FormControl,
+    InputLabel,
+    ListItemText,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    SelectChangeEvent
+} from "@mui/material";
+import {ChangeEvent, useEffect, useRef, useState} from "react";
 import TeacherData from "../../types/teacherData";
 import PupilData from "../../types/pupilData";
 import TeacherService from "../../service/teacher.service";
@@ -23,6 +33,10 @@ import PupilService from "../../service/pupil.service";
 import DatePicker from '@mui/lab/DatePicker';
 import {LocalizationProvider} from "@mui/lab";
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import UniversityService from "../../service/university.service";
+import UniversityData from "../../types/universityData";
+import GroupData from "../../types/groupData";
+import GroupService from "../../service/group.service";
 
 const Copyright = (props: any) => {
     return CopyrightComponent.renderCopyRight(props);
@@ -36,6 +50,14 @@ const addPupil = async (pupil: PupilData, groupId: string) => {
     return await PupilService.add(pupil, groupId);
 }
 
+const getUniversities = async () => {
+    return await UniversityService.get();
+}
+
+const getGroupsByUniversity = async (universityId: any) => {
+    return await GroupService.getByUniversity(universityId);
+}
+
 const theme = createTheme();
 
 export default function UserTypeSelectorComponent() {
@@ -43,7 +65,27 @@ export default function UserTypeSelectorComponent() {
     const [isPupil, setPupil] = useState<boolean>(false);
     const [date, setDate] = React.useState<Date | null>(new Date());
     const [grade, setGrade] = React.useState('');
-    const [university, setUniversity] = React.useState('');
+    const [university, setUniversity] = React.useState<UniversityData | null | undefined>(null);
+    const [groupVal, setGroupVal] = React.useState<GroupData | null>(null);
+
+    const [universities, setUniversities] = useState<UniversityData[]>([]);
+    const [groups, setGroups] = useState<GroupData[]>([]);
+
+    useEffect(() => {
+        getUniversities().then(response => {
+            console.log(response.data);
+            setUniversities(response.data);
+        })
+    }, []);
+
+    useEffect(() => {
+        if (university) {
+            getGroupsByUniversity(university.id).then(response => {
+                console.log(response.data);
+                setGroups(response.data)
+            })
+        }
+    }, [university])
 
     const history = useHistory();
 
@@ -63,37 +105,35 @@ export default function UserTypeSelectorComponent() {
         }
 
         console.log(teacher);
+        console.log(university);
 
         if (isPupil) {
             pupil = {
                 recordBook: String(data.get('recordBook'))
             }
         }
-
-        // const registration: RegistrationData = {
-        //     login: String(data.get('login')),
-        //     email: String(data.get('email')),
-        //     password: String(data.get('password')),
-        //     firstName: String(data.get('firstName')),
-        //     lastName: String(data.get('lastName')),
-        //     patronymic: String(data.get('patronymic'))
-        // };
-
-        // register(registration).then(response => {
-        //     history.push('/login');
-        // }).catch(e => {
-        //     console.log("Не всё идёт по плану! " + JSON.stringify(e));
-        // });
-
     };
 
     const handleChangeSelect = (event: SelectChangeEvent) => {
         setGrade(event.target.value as string);
     };
 
+    const handleUniSelect = (event: SelectChangeEvent) => {
+        setUniversity(universities.find(uni => uni.id === Number(event.target.value)));
+    }
+
+    // const handleGroupSelect = (event: SelectChangeEvent) => {
+    //     setGroupVal(groups.find(grou => grou.id === Number(event.target.value)));
+    // }
+
     const handleChange = (prop: any) => (event: ChangeEvent<HTMLInputElement>) => {
         prop === 'teacher' ? setTeacher(event.target.checked) : setPupil(event.target.checked);
     };
+
+    const filterOptionsGroup = createFilterOptions({
+        // matchFrom: 'start',
+        stringify: (option: GroupData) => `${option.guid} (${option.name})`,
+    });
 
     return (
         <ThemeProvider theme={theme}>
@@ -101,19 +141,28 @@ export default function UserTypeSelectorComponent() {
                 <CssBaseline/>
                 <Box
                     sx={{
-                        marginTop: 6,
+                        marginTop: 5,
+                        marginLeft: 10,
                         display: 'flex',
-                        flexDirection: 'column',
                         alignItems: 'center',
                     }}
                 >
                     <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                        <LockOutlinedIcon/>
+                        <SchoolIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign up
+                        Выберите тип пользователя
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 1}}>
+                </Box>
+                <Box
+                    sx={{
+                        marginTop: 1,
+                        display: 'grid',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Box component="form" noValidate onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={4}>
                                 <FormControlLabel control={
@@ -132,89 +181,105 @@ export default function UserTypeSelectorComponent() {
                                     />} label="Ученик"/>
                             </Grid>
                             <Grid item xs={12} sm={12}>
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DatePicker
-                                        disableFuture
-                                        label="Дата начала преподавания"
-                                        openTo="year"
-                                        views={['year', 'month', 'day']}
-                                        value={date}
-                                        minDate={new Date('1950-01-01')}
-                                        maxDate={new Date()}
-                                        onChange={(newValue) => {
-                                            setDate(newValue);
-                                        }}
-                                        renderInput={(params) =>
-                                            <TextField {...params} fullWidth />
-                                        }
-                                    />
-                                </LocalizationProvider>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth required >
-                                    <InputLabel id="gradeLabel">Степень</InputLabel>
-                                    <Select
-                                        labelId="gradeLabel"
-                                        id="grade"
-                                        value={grade}
-                                        label="Степень"
-                                        onChange={handleChangeSelect}
-                                    >
-                                        <MenuItem value={'PH_D'}>Доктор наук</MenuItem>
-                                        <MenuItem value={'PHD'}>Кандидат наук</MenuItem>
-                                        <MenuItem value={'ASSISTANT_PROFESSOR'}>Доцент</MenuItem>
-                                        <MenuItem value={'ENGINEER'}>Инженер</MenuItem>
-                                        <MenuItem value={'ASSISTANT'}>Ассистент</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth required >
+                                <FormControl fullWidth required color="secondary" margin="normal">
                                     <InputLabel id="uniLabel">Университет</InputLabel>
                                     <Select
                                         labelId="uniLabel"
                                         id="uni"
-                                        value={grade}
-                                        label="Степень"
-                                        onChange={handleChangeSelect}
+                                        value={university ? String(university.id) : ''}
+                                        label={'Университет'}
+                                        onChange={handleUniSelect}
                                     >
-                                        <MenuItem value={'PH_D'}>Доктор наук</MenuItem>
-                                        <MenuItem value={'PHD'}>Кандидат наук</MenuItem>
-                                        <MenuItem value={'ASSISTANT_PROFESSOR'}>Доцент</MenuItem>
-                                        <MenuItem value={'ENGINEER'}>Инженер</MenuItem>
-                                        <MenuItem value={'ASSISTANT'}>Ассистент</MenuItem>
+                                        {universities.map((uni) => (
+                                            <MenuItem
+                                                key={uni.id}
+                                                value={String(uni.id)}
+                                            >
+                                                {`${uni.guid} (${uni.name})`}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
                                 </FormControl>
                             </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email"
-                                    name="email"
-                                    autoComplete="email"
-                                    color="secondary"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Пароль"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
-                                    color="secondary"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary"/>}
-                                    label="I want to receive inspiration, marketing promotions and updates via email."
-                                />
-                            </Grid>
+                            {isTeacher ? (
+                                <>
+                                    <Grid item xs={12} sm={12}>
+                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                            <DatePicker
+                                                disableFuture
+                                                label="Дата начала преподавания"
+                                                openTo="year"
+                                                views={['year', 'month', 'day']}
+                                                value={date}
+                                                minDate={new Date('1950-01-01')}
+                                                maxDate={new Date()}
+                                                onChange={(newValue) => {
+                                                    setDate(newValue);
+                                                }}
+                                                renderInput={(params) =>
+                                                    <TextField {...params} fullWidth color="secondary" margin="normal"/>
+                                                }
+                                            />
+                                        </LocalizationProvider>
+                                    </Grid>
+                                    <Grid item xs={12} sm={12}>
+                                        <FormControl fullWidth required color="secondary" margin="normal">
+                                            <InputLabel id="gradeLabel">Степень</InputLabel>
+                                            <Select
+                                                labelId="gradeLabel"
+                                                id="grade"
+                                                value={grade}
+                                                label="Степень"
+                                                onChange={handleChangeSelect}
+                                            >
+                                                <MenuItem value={'PH_D'}>Доктор наук</MenuItem>
+                                                <MenuItem value={'PHD'}>Кандидат наук</MenuItem>
+                                                <MenuItem value={'ASSISTANT_PROFESSOR'}>Доцент</MenuItem>
+                                                <MenuItem value={'ENGINEER'}>Инженер</MenuItem>
+                                                <MenuItem value={'ASSISTANT'}>Ассистент</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </>
+                            ) : (<></>)}
+                            {(isPupil ? (
+                            <>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        name="recordBook"
+                                        label="Зачетная книжка"
+                                        type="recordBook"
+                                        id="recordBook"
+                                        autoComplete="recordBook"
+                                        color="secondary"
+                                        margin="normal"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={12}>
+                                    <Autocomplete
+                                        id="group"
+                                        options={groups}
+                                        getOptionLabel={(option) => `${option.guid} (${option.name})`}
+                                        onChange={(event: any, newValue: GroupData | null) => {
+                                            setGroupVal(newValue);
+                                        }}
+                                        value={groupVal}
+                                        filterOptions={filterOptionsGroup}
+                                        renderInput={(params) =>
+                                            <TextField
+                                                {...params}
+                                                fullWidth
+                                                required
+                                                label="Группа"
+                                                margin="normal"
+                                                color="secondary"
+                                            />}
+                                    />
+                                </Grid>
+                            </>
+                            ) : (<></>))}
                         </Grid>
                         <Button
                             type="submit"
@@ -227,8 +292,8 @@ export default function UserTypeSelectorComponent() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/login" variant="body2">
-                                    Уже есть аккаунт? Войти
+                                <Link href="/university" variant="body2">
+                                    Не нашли свой университет?
                                 </Link>
                             </Grid>
                         </Grid>

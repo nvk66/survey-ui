@@ -12,6 +12,16 @@ import EventBus from "./common/EventBus";
 import SignIn from "./component/auth/test.login.component";
 import Registration from "./component/auth/registration.component";
 import UserTypeSelectorComponent from "./component/auth/user.type.selector.component";
+import UniversityComponent from "./component/university/university.component";
+import GroupComponent from "./component/university/group/group.component";
+import SubjectComponent from "./component/university/subject/subject.componet";
+import CourseComponent from "./component/university/course/course.component";
+import SurveyComponent from "./component/survey/survey.component";
+import ManageSurveyComponent from "./component/survey/manage.survey.component";
+import CategoryComponent from "./component/survey/category/category.component";
+import QuestionComponent from "./component/survey/question/question.component";
+import SurveyViewComponent from "./component/survey/survey.view.component";
+import ManageCategoryComponent from "./component/survey/category/manage.category.component";
 
 type Props = {};
 
@@ -101,7 +111,18 @@ class App extends Component<Props, State> {
                         <Route exact path="/login" component={Login}/>
                         <Route exact path="/testLogin" component={SignIn}/>
                         <Route exact path="/registration" component={Registration}/>
+                        <Route exact path="/university" component={UniversityComponent}/>
+                        <Route exact path="/group" component={GroupComponent}/>
+                        <Route exact path="/subject" component={SubjectComponent}/>
                         <Route exact path="/registration/type" component={UserTypeSelectorComponent}/>
+                        <Route exact path="/:id/course" component={CourseComponent}/>
+                        <Route exact path="/survey" component={SurveyComponent}/>
+                        <Route exact path="/survey/:id" component={ManageSurveyComponent}/>
+                        <Route exact path="/survey/:id/category" component={CategoryComponent}/>
+                        <Route exact path="/survey/:surveyId/category/:categoryId" component={ManageCategoryComponent}/>
+                        <Route exact path="/survey/:surveyId/category/:categoryId/question"
+                               component={QuestionComponent}/>
+                        <Route exact path="/handle/survey/:surveyId/:courseId" component={SurveyViewComponent}/>
                         {/*<Route exact path="/merchant" component={Merchant}/>*/}
                         {/*<Route exact path="/merchantTable" component={MerchantsTable}/>*/}
                         {/*<Route exact path="/providerTable" component={ProvidersTable}/>*/}
