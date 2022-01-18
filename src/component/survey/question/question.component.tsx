@@ -56,7 +56,7 @@ export default function QuestionComponent() {
             console.log(response.data);
             setCategory(response.data);
         });
-    }, []);
+    }, [surveyId, categoryId]);
 
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

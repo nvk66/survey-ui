@@ -86,7 +86,7 @@ export default function ManageCategoryComponent() {
         getQuestions(surveyId, categoryId).then(response => {
             setQuestions(response.data);
         })
-    }, []);
+    }, [surveyId, categoryId]);
 
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

@@ -66,7 +66,7 @@ export default function ManageSurveyComponent() {
         getCategories(id).then(response => {
             setCategories(response.data);
         })
-    }, [])
+    }, [id])
 
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

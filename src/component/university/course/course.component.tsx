@@ -26,6 +26,7 @@ import CourseData from "../../../types/courseData";
 import CourseService from "../../../service/course.service";
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import TokenService from "../../../service/token.service";
 
 const Copyright = (props: any) => {
     return CopyrightComponent.renderCopyRight(props);
@@ -66,7 +67,8 @@ const filterOptionsTeacher = createFilterOptions({
 
 export default function CourseComponent() {
     const history = useHistory();
-    const {id} = useParams<{ id?: string }>();
+    // const {id} = useParams<{ id?: string }>();
+    // const id = useState(TokenService.getUser().university);
 
     const [groups, setGroups] = useState<GroupData[]>([]);
     const [subjects, setSubjects] = useState<SubjectData[]>([]);
@@ -80,19 +82,24 @@ export default function CourseComponent() {
     const [till, setTill] = React.useState<Date | null>(new Date(new Date().getFullYear() + 1, 5, 31));
 
     useEffect(() => {
+        const id = TokenService.getUser().university;
+
         getGroups(id).then(response => {
             console.log(response.data);
             setGroups(response.data);
         });
+
         getTeachers(id).then(response => {
             console.log(response.data);
             setTeachers(response.data);
-        })
+        });
+
         getSubjects(id).then(response => {
             console.log(response.data);
             setSubjects(response.data);
-        })
-    }, [])
+        });
+
+    }, []);
 
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

@@ -42,7 +42,7 @@ export default function CategoryComponent() {
             console.log(response.data);
             setSurvey(response.data);
         });
-    }, [])
+    }, [id])
 
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);

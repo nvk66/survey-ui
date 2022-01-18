@@ -3,7 +3,6 @@ import loginDada from "../types/loginData"
 import userData from "../types/userData"
 import registrationData from "../types/registrationData"
 
-// class AuthService {
 const parseJwt = (token: string) => {
     try {
         return JSON.parse(atob(token.split('.')[1]));
@@ -26,6 +25,7 @@ const login = (auth: loginDada) => {
                     roles: parsedToken.roles,
                     accessToken: response.data.accessToken,
                     refreshToken: response.data.refreshToken,
+                    university: response.data.university,
                     expireDataAccessToken: parsedToken.exp
                 }
                 console.log(user);
@@ -35,8 +35,8 @@ const login = (auth: loginDada) => {
         });
 }
 
-const signUp = (auth: registrationData) => {
-    return instance.post<registrationData>('signup', auth);
+const signUp = (auth: registrationData, id: any) => {
+    return instance.post<registrationData>('signup/' + id, auth);
 }
 
 const logout = () => {
@@ -46,7 +46,6 @@ const logout = () => {
 const getCurrentUser = () => {
     return JSON.parse(localStorage.getItem('user') as string);
 }
-// }
 
 const AuthService = {
     getCurrentUser,

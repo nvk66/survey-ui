@@ -17,6 +17,7 @@ import Grid from "@mui/material/Grid";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import SubjectData from "../../../types/subjectData";
 import SubjectService from "../../../service/subject.service";
+import TokenService from "../../../service/token.service";
 
 const Copyright = (props: any) => {
     return CopyrightComponent.renderCopyRight(props);
@@ -26,8 +27,8 @@ const addSubject = async (subject: SubjectData, universityId: any) => {
     return await SubjectService.add(subject, universityId);
 }
 
-const getUniversities = async () => {
-    return await UniversityService.get();
+const getUniversity = async (universityId: string) => {
+    return await UniversityService.getById(universityId);
 }
 
 const theme = createTheme();
@@ -37,14 +38,12 @@ export default function SubjectComponent() {
     const [university, setUniversity] = React.useState<UniversityData | null | undefined>(null);
     const [ratingType, setRatingType] = React.useState('');
 
-    const [universities, setUniversities] = useState<UniversityData[]>([]);
-
     useEffect(() => {
-        getUniversities().then(response => {
+        getUniversity(TokenService.getUser().university).then(response => {
             console.log(response.data);
-            setUniversities(response.data);
+            setUniversity(response.data);
         })
-    }, [])
+    }, []);
 
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -76,10 +75,6 @@ export default function SubjectComponent() {
 
     };
 
-    const handleUniSelect = (event: SelectChangeEvent) => {
-        setUniversity(universities.find(uni => uni.id === Number(event.target.value)));
-    }
-
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
@@ -100,27 +95,6 @@ export default function SubjectComponent() {
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate
                          sx={{mt: 1, maxWidth: 500, minWidth: 300, width: 500}}>
-                        <Grid item xs={12} sm={12}>
-                            <FormControl fullWidth required margin="normal" color="secondary">
-                                <InputLabel id="uniLabel">Университет</InputLabel>
-                                <Select
-                                    labelId="uniLabel"
-                                    id="uni"
-                                    value={university ? String(university.id) : ''}
-                                    label={'Университет'}
-                                    onChange={handleUniSelect}
-                                >
-                                    {universities.map((uni) => (
-                                        <MenuItem
-                                            key={uni.id}
-                                            value={String(uni.id)}
-                                        >
-                                            {`${uni.guid} (${uni.name})`}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
                         <Grid item xs={12} sm={12}>
                             <TextField
                                 margin="normal"

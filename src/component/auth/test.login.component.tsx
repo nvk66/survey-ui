@@ -14,6 +14,7 @@ import LoginService from "../../service/auth.service";
 import LoginData from '../../types/loginData';
 import {useState} from "react";
 import CopyrightComponent from "../common/copyright.component";
+import {useHistory} from "react-router-dom";
 
 const Copyright = (props: any) => {
     return CopyrightComponent.renderCopyRight(props);
@@ -22,6 +23,8 @@ const Copyright = (props: any) => {
 const theme = createTheme();
 
 export default function SignIn() {
+
+    const history = useHistory();
 
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -46,8 +49,7 @@ export default function SignIn() {
 
         LoginService.login(auth).then(
             () => {
-                // this.props.history.push("/merchantTable");
-                window.location.reload();
+                history.push("/registration/type");
             },
             error => {
                 const resMessage =

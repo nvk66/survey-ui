@@ -42,8 +42,8 @@ const getQuestions = async (surveyId: any, categoryId: any) => {
     return await QuestionService.getAllByCategory(surveyId, categoryId);
 }
 
-const addAnswers = async (answers: AnswerData[], surveyId: any) => {
-    return await AnswerService.addSurveyAnswer(answers, surveyId);
+const addAnswers = async (answers: AnswerData[], surveyId: any, permissionId: any) => {
+    return await AnswerService.addSurveyAnswer(answers, surveyId, permissionId);
 }
 
 const getCourse = async (courseId: any) => {
@@ -149,7 +149,7 @@ const renderAnswer = (question: QuestionData,
 
 export default function SurveyViewComponent() {
     const history = useHistory();
-    const { surveyId, courseId } = useParams<{ surveyId: string, courseId: string }>();
+    const { surveyId, permissionId } = useParams<{ surveyId: string, permissionId: string }>();
 
     const [survey, setSurvey] = useState<SurveyData>();
     const [course, setCourse] = useState<CourseData>()
@@ -166,11 +166,11 @@ export default function SurveyViewComponent() {
             console.log(response.data);
             setCategories(response.data);
         });
-        getCourse(courseId).then(response => {
+        getCourse(permissionId).then(response => {
             console.log(response.data);
             setCourse(response.data);
         });
-    }, [surveyId, courseId]);
+    }, [surveyId, permissionId]);
 
     useEffect(() => {
         categories.forEach(category => {
@@ -187,7 +187,7 @@ export default function SurveyViewComponent() {
                 })
             })
         })
-    }, [categories, surveyId]);
+    }, [categories, surveyId, permissionId]);
 
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -197,7 +197,7 @@ export default function SurveyViewComponent() {
 
         console.log(answers);
 
-        addAnswers(answers, surveyId).then(response => {
+        addAnswers(answers, surveyId, permissionId).then(response => {
             history.push('/groups');
         }).catch(e => {
             console.log("Не всё идёт по плану! " + JSON.stringify(e));

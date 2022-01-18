@@ -37,21 +37,22 @@ import UniversityService from "../../service/university.service";
 import UniversityData from "../../types/universityData";
 import GroupData from "../../types/groupData";
 import GroupService from "../../service/group.service";
+import TokenService from "../../service/token.service";
 
 const Copyright = (props: any) => {
     return CopyrightComponent.renderCopyRight(props);
 }
 
-const addTeacher = async (teacher: TeacherData, universityId: string) => {
-    return await TeacherService.add(teacher, universityId);
+const addTeacher = async (teacher: TeacherData) => {
+    return await TeacherService.add(teacher);
 }
 
 const addPupil = async (pupil: PupilData, groupId: string) => {
     return await PupilService.add(pupil, groupId);
 }
 
-const getUniversities = async () => {
-    return await UniversityService.get();
+const getUniversity = async (universityId: string) => {
+    return await UniversityService.getById(universityId);
 }
 
 const getGroupsByUniversity = async (universityId: any) => {
@@ -68,13 +69,13 @@ export default function UserTypeSelectorComponent() {
     const [university, setUniversity] = React.useState<UniversityData | null | undefined>(null);
     const [groupVal, setGroupVal] = React.useState<GroupData | null>(null);
 
-    const [universities, setUniversities] = useState<UniversityData[]>([]);
+    // const [universities, setUniversities] = useState<UniversityData[]>([]);
     const [groups, setGroups] = useState<GroupData[]>([]);
 
     useEffect(() => {
-        getUniversities().then(response => {
+        getUniversity(TokenService.getUser().university).then(response => {
             console.log(response.data);
-            setUniversities(response.data);
+            setUniversity(response.data);
         })
     }, []);
 
@@ -95,13 +96,19 @@ export default function UserTypeSelectorComponent() {
         const data = new FormData(event.currentTarget);
 
         let teacher: TeacherData | null = null;
-        let pupil: PupilData;
+        let pupil: PupilData | null = null;
 
         if (isTeacher) {
             teacher = {
                 teachingDate: String(date?.toLocaleDateString()),
                 grade: grade,
             }
+
+            addTeacher(teacher).then(response => {
+                // history.push('/survey');
+            }).catch(e => {
+                console.log("Не всё идёт по плану! " + JSON.stringify(e));
+            });
         }
 
         console.log(teacher);
@@ -111,6 +118,18 @@ export default function UserTypeSelectorComponent() {
             pupil = {
                 recordBook: String(data.get('recordBook'))
             }
+
+            addPupil(pupil, String(groupVal?.id)).then(response => {
+                // history.push('/survey');
+            }).catch(e => {
+                console.log("Не всё идёт по плану! " + JSON.stringify(e));
+            });
+        }
+
+        console.log(pupil);
+
+        if (isTeacher || isPupil) {
+            history.push('/survey');
         }
     };
 
@@ -118,9 +137,9 @@ export default function UserTypeSelectorComponent() {
         setGrade(event.target.value as string);
     };
 
-    const handleUniSelect = (event: SelectChangeEvent) => {
-        setUniversity(universities.find(uni => uni.id === Number(event.target.value)));
-    }
+    // const handleUniSelect = (event: SelectChangeEvent) => {
+    //     setUniversity(universities.find(uni => uni.id === Number(event.target.value)));
+    // }
 
     // const handleGroupSelect = (event: SelectChangeEvent) => {
     //     setGroupVal(groups.find(grou => grou.id === Number(event.target.value)));
@@ -180,27 +199,27 @@ export default function UserTypeSelectorComponent() {
                                         color="secondary"
                                     />} label="Ученик"/>
                             </Grid>
-                            <Grid item xs={12} sm={12}>
-                                <FormControl fullWidth required color="secondary" margin="normal">
-                                    <InputLabel id="uniLabel">Университет</InputLabel>
-                                    <Select
-                                        labelId="uniLabel"
-                                        id="uni"
-                                        value={university ? String(university.id) : ''}
-                                        label={'Университет'}
-                                        onChange={handleUniSelect}
-                                    >
-                                        {universities.map((uni) => (
-                                            <MenuItem
-                                                key={uni.id}
-                                                value={String(uni.id)}
-                                            >
-                                                {`${uni.guid} (${uni.name})`}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
+                            {/*<Grid item xs={12} sm={12}>*/}
+                            {/*    <FormControl fullWidth required color="secondary" margin="normal">*/}
+                            {/*        <InputLabel id="uniLabel">Университет</InputLabel>*/}
+                            {/*        <Select*/}
+                            {/*            labelId="uniLabel"*/}
+                            {/*            id="uni"*/}
+                            {/*            value={university ? String(university.id) : ''}*/}
+                            {/*            label={'Университет'}*/}
+                            {/*            onChange={handleUniSelect}*/}
+                            {/*        >*/}
+                            {/*            {universities.map((uni) => (*/}
+                            {/*                <MenuItem*/}
+                            {/*                    key={uni.id}*/}
+                            {/*                    value={String(uni.id)}*/}
+                            {/*                >*/}
+                            {/*                    {`${uni.guid} (${uni.name})`}*/}
+                            {/*                </MenuItem>*/}
+                            {/*            ))}*/}
+                            {/*        </Select>*/}
+                            {/*    </FormControl>*/}
+                            {/*</Grid>*/}
                             {isTeacher ? (
                                 <>
                                     <Grid item xs={12} sm={12}>

@@ -4,5 +4,5 @@ export default interface RegistrationData {
     firstName: string,
     patronymic: string,
     lastName: string,
-    password: string,
+    password: string
 }

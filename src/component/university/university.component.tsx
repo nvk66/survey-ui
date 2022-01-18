@@ -22,7 +22,6 @@ const addUniversity = async (university: UniversityData) => {
     return await UniversityService.add(university);
 }
 
-
 const theme = createTheme();
 
 export default function UniversityComponent() {
@@ -30,7 +29,6 @@ export default function UniversityComponent() {
 
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

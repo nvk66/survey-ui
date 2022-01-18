@@ -3,5 +3,6 @@ export default interface UserData {
     login?: string | null,
     accessToken?: string | null,
     refreshToken?: string | null,
+    university?: any | null,
     roles?: Array<string>
 }

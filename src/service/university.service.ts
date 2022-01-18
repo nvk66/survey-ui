@@ -12,9 +12,14 @@ const add = (university: UniversityData) => {
     return instance.post<universityData>(uniPath, university);
 }
 
+const getById = (universityId: any) => {
+    return instance.get<universityData>(uniPath + universityId);
+}
+
 const UniversityService = {
     get,
-    add
+    add,
+    getById
 };
 
 export default UniversityService;

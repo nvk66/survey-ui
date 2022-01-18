@@ -22,6 +22,9 @@ import CategoryComponent from "./component/survey/category/category.component";
 import QuestionComponent from "./component/survey/question/question.component";
 import SurveyViewComponent from "./component/survey/survey.view.component";
 import ManageCategoryComponent from "./component/survey/category/manage.category.component";
+import NotFound from "./component/common/not.found.component";
+import ProfileComponent from "./component/profile/profile.component";
+import UserManagementComponent from "./component/manangement/user.management.component";
 
 type Props = {};
 
@@ -103,7 +106,10 @@ class App extends Component<Props, State> {
                         {/*        }*/}
                         {/*    </li>*/}
                         {/*</div>*/}
-                    </nav> : (<div/>)
+                    </nav> : (
+                        <>
+                        </>
+                    )
                 }
 
                 <div className="container mt-3">
@@ -117,16 +123,15 @@ class App extends Component<Props, State> {
                         <Route exact path="/registration/type" component={UserTypeSelectorComponent}/>
                         <Route exact path="/:id/course" component={CourseComponent}/>
                         <Route exact path="/survey" component={SurveyComponent}/>
+                        <Route exact path="/surveys" component={ProfileComponent}/>
                         <Route exact path="/survey/:id" component={ManageSurveyComponent}/>
                         <Route exact path="/survey/:id/category" component={CategoryComponent}/>
                         <Route exact path="/survey/:surveyId/category/:categoryId" component={ManageCategoryComponent}/>
                         <Route exact path="/survey/:surveyId/category/:categoryId/question"
                                component={QuestionComponent}/>
                         <Route exact path="/handle/survey/:surveyId/:courseId" component={SurveyViewComponent}/>
-                        {/*<Route exact path="/merchant" component={Merchant}/>*/}
-                        {/*<Route exact path="/merchantTable" component={MerchantsTable}/>*/}
-                        {/*<Route exact path="/providerTable" component={ProvidersTable}/>*/}
-                        {/*<Route exact path="/provider" component={Provider}/>*/}
+                        <Route exact path="/users" component={UserManagementComponent}/>
+                        <Route component={NotFound}/>
                     </Switch>
                 </div>
 

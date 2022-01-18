@@ -16,19 +16,42 @@ import CopyrightComponent from "../common/copyright.component";
 import RegistrationData from "../../types/registrationData";
 import AuthService from "../../service/auth.service";
 import {useHistory} from "react-router-dom";
+import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import UniversityData from "../../types/universityData";
+import {useEffect, useState} from "react";
+import UniversityService from "../../service/university.service";
 
 const Copyright = (props: any) => {
     return CopyrightComponent.renderCopyRight(props);
 }
 
-const register = async (auth: RegistrationData) => {
-    return await AuthService.signUp(auth);
+const register = async (auth: RegistrationData, id: any) => {
+    return await AuthService.signUp(auth, id);
+}
+
+const getUniversities = async () => {
+    return await UniversityService.get();
 }
 
 const theme = createTheme();
 
 export default function Registration() {
     const history = useHistory();
+
+    const [university, setUniversity] = React.useState<UniversityData | null | undefined>(null);
+
+    const [universities, setUniversities] = useState<UniversityData[]>([]);
+
+    useEffect(() => {
+        getUniversities().then(response => {
+            console.log(response.data);
+            setUniversities(response.data);
+        })
+    }, []);
+
+    const handleUniSelect = (event: SelectChangeEvent) => {
+        setUniversity(universities.find(uni => uni.id === Number(event.target.value)));
+    }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -40,10 +63,10 @@ export default function Registration() {
             password: String(data.get('password')),
             firstName: String(data.get('firstName')),
             lastName: String(data.get('lastName')),
-            patronymic: String(data.get('patronymic'))
+            patronymic: String(data.get('patronymic')),
         };
 
-        register(registration).then(response => {
+        register(registration, university?.id).then(response => {
             history.push('/login');
         }).catch(e => {
             console.log("Не всё идёт по плану! " + JSON.stringify(e));
@@ -126,6 +149,27 @@ export default function Registration() {
                                     autoComplete="email"
                                     color="secondary"
                                 />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                                <FormControl fullWidth required color="secondary" margin="normal">
+                                    <InputLabel id="uniLabel">Университет</InputLabel>
+                                    <Select
+                                        labelId="uniLabel"
+                                        id="uni"
+                                        value={university ? String(university.id) : ''}
+                                        label={'Университет'}
+                                        onChange={handleUniSelect}
+                                    >
+                                        {universities.map((uni) => (
+                                            <MenuItem
+                                                key={uni.id}
+                                                value={String(uni.id)}
+                                            >
+                                                {`${uni.guid} (${uni.name})`}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
