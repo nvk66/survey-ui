@@ -270,7 +270,7 @@ export default function App() {
                             />
                             <RoleBasedRouting
                                 Component={UserManagementComponent}
-                                path="/handle/survey/:surveyId/:permissionId"
+                                path="/users/management"
                                 requiredRoles="ROLE_UNIVERSITY_ADMINISTRATOR"
                                 exact={true}
                             />
