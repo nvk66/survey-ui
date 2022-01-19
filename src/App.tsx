@@ -6,8 +6,6 @@ import {Route, Switch} from "react-router-dom";
 import AuthService from "./service/auth.service";
 import UserData from './types/userData';
 
-import Login from "./component/auth/login.component";
-
 import EventBus from "./common/EventBus";
 import SignIn from "./component/auth/test.login.component";
 import Registration from "./component/auth/registration.component";
@@ -114,7 +112,6 @@ class App extends Component<Props, State> {
 
                 <div className="container mt-3">
                     <Switch>
-                        <Route exact path="/login" component={Login}/>
                         <Route exact path="/testLogin" component={SignIn}/>
                         <Route exact path="/registration" component={Registration}/>
                         <Route exact path="/university" component={UniversityComponent}/>
