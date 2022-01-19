@@ -40,7 +40,7 @@ export default function ProfileComponent() {
     }, [value]);
 
     const processSurvey = (survey: SurveyDataInfo) => {
-        history.push(`/survey/result/${survey.id}/${survey.permissionId}`);
+        history.push(`/handle/survey/${survey.permissionId}`);
     }
 
     surveyRef.current = surveys;
