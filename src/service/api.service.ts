@@ -2,7 +2,8 @@ import axios, {AxiosRequestConfig} from 'axios';
 import TokenService from './token.service';
 import userData from '../types/userData'
 
-const host = 'http://localhost:8081/api/';
+// const host = 'http://localhost:8081/api/';
+const host = 'https://student-teacher-survey-back.herokuapp.com/api/';
 
 const instance = axios.create({
     baseURL: host,
