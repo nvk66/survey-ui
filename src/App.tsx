@@ -324,7 +324,7 @@ export default function App() {
                             />
                             <RoleBasedRouting
                                 Component={SurveyViewComponent}
-                                path="/handle/survey/:permissionId"
+                                path="/handle/survey/:surveyId/:permissionId"
                                 requiredRoles="ROLE_PUPIL"
                                 exact={true}
                             />
