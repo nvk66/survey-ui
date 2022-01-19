@@ -3,7 +3,7 @@ import loginDada from "../types/loginData"
 import userData from "../types/userData"
 import registrationData from "../types/registrationData"
 
-const parseJwt = (token: string) => {
+const parseJwt = (token: any) => {
     try {
         return JSON.parse(atob(token.split('.')[1]));
     } catch (e) {

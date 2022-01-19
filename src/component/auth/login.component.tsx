@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import LoginService from "../../service/auth.service";
+import AuthService from "../../service/auth.service";
 import LoginData from '../../types/loginData';
 import CopyrightComponent from "../common/copyright.component";
 import {useHistory} from "react-router-dom";
@@ -49,16 +50,19 @@ export default function SignIn() {
 
         LoginService.login(auth).then(
             (response: UserData) => {
-                if (response.roles?.includes("ROLE_USER_NOT_CONFIRMED")) {
+                console.log(response)
+                console.log(AuthService.parseJwt(response?.accessToken))
+                const roles = AuthService.parseJwt(response?.accessToken);
+                if (roles.roles?.includes("ROLE_USER_NOT_CONFIRMED")) {
                     history.push("/registration/type");
                 } else {
-                    if (response.roles?.includes("ROLE_USER")) {
-                        history.push("/surveys");
-                    } else if (response.roles?.includes("ROLE_TEACHER")) {
-                        history.push("/rating");
-                    } else if (response.roles?.includes("ROLE_ADMINISTRATOR")) {
+                    if (roles.roles?.includes("ROLE_UNIVERSITY_ADMINISTRATOR")) {
                         history.push("/users");
-                    } else if (response.roles?.includes("ROLE_UNIVERSITY_ADMINISTRATOR")) {
+                    } else if (roles.roles?.includes("ROLE_USER")) {
+                        history.push("/surveys");
+                    } else if (roles.roles?.includes("ROLE_TEACHER")) {
+                        history.push("/rating");
+                    } else if (roles.roles?.includes("ROLE_ADMINISTRATOR")) {
                         history.push("/users");
                     }
                 }
