@@ -20,12 +20,15 @@ const login = (auth: loginDada) => {
         .then(response => {
             if (response.data.accessToken) {
                 const parsedToken = parseJwt(response.data.accessToken)
+                console.log("parsedToken")
+                console.log(parsedToken)
+                console.log(parsedToken)
                 const user = {
                     login: parsedToken.sub,
                     roles: parsedToken.roles,
                     accessToken: response.data.accessToken,
                     refreshToken: response.data.refreshToken,
-                    university: response.data.university,
+                    university: parsedToken.university,
                     expireDataAccessToken: parsedToken.exp
                 }
                 console.log(user);

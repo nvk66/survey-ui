@@ -91,7 +91,7 @@ export default function SubjectComponent() {
                         <AddCircleOutlineIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Добавить группу
+                        Добавить предмет
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate
                          sx={{mt: 1, maxWidth: 500, minWidth: 300, width: 500}}>

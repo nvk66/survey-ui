@@ -198,7 +198,7 @@ export default function SurveyViewComponent() {
         console.log(answers);
 
         addAnswers(answers, surveyId, permissionId).then(response => {
-            history.push('/groups');
+            history.push('/surveys');
         }).catch(e => {
             console.log("Не всё идёт по плану! " + JSON.stringify(e));
         });

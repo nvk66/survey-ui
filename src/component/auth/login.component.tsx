@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,12 +10,12 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import LoginService from "../../service/auth.service";
 import LoginData from '../../types/loginData';
-import {useState} from "react";
 import CopyrightComponent from "../common/copyright.component";
 import {useHistory} from "react-router-dom";
+import UserData from "../../types/userData";
 
 const Copyright = (props: any) => {
     return CopyrightComponent.renderCopyRight(props);
@@ -29,12 +30,11 @@ export default function SignIn() {
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
-
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
-            login: data.get('email'),
+            login: data.get('login'),
             password: data.get('password'),
         });
 
@@ -48,8 +48,20 @@ export default function SignIn() {
 
 
         LoginService.login(auth).then(
-            () => {
-                history.push("/registration/type");
+            (response: UserData) => {
+                if (response.roles?.includes("ROLE_USER_NOT_CONFIRMED")) {
+                    history.push("/registration/type");
+                } else {
+                    if (response.roles?.includes("ROLE_USER")) {
+                        history.push("/surveys");
+                    } else if (response.roles?.includes("ROLE_TEACHER")) {
+                        history.push("/rating");
+                    } else if (response.roles?.includes("ROLE_ADMINISTRATOR")) {
+                        history.push("/users");
+                    } else if (response.roles?.includes("ROLE_UNIVERSITY_ADMINISTRATOR")) {
+                        history.push("/users");
+                    }
+                }
             },
             error => {
                 const resMessage =

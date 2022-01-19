@@ -73,7 +73,7 @@ export default function SurveyComponent() {
                         <AddCircleOutlineIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Регистрация
+                        Добавит опрос
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{mt: 3}}>
                         <Grid container spacing={2}>

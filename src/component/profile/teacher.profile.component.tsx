@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import CopyrightComponent from "../common/copyright.component";
 import {useHistory} from "react-router-dom";
-import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@mui/material";
+import {Button} from "@mui/material";
 import {Column, useTable} from "react-table";
 import SurveyService from "../../service/survey.service";
 import SurveyDataInfo from "../../types/surveyDataInfo";
@@ -15,32 +15,27 @@ const Copyright = (props: any) => {
     return CopyrightComponent.renderCopyRight(props);
 }
 
-const getSurveys = async (status: string) => {
-    return await SurveyService.getSurveys(status.toUpperCase());
+const getSurveys = async () => {
+    return await SurveyService.getSurveysForTeacher();
 }
 
 const theme = createTheme();
 
-export default function ProfileComponent() {
+export default function TeacherProfileComponent() {
     const history = useHistory();
 
     const [surveys, setSurveys] = useState<Array<SurveyDataInfo>>([]);
     const surveyRef = useRef<Array<SurveyDataInfo>>([]);
-    const [value, setValue] = React.useState('done');
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValue((event.target as HTMLInputElement).value);
-    };
 
     useEffect(() => {
-        getSurveys(value).then(response => {
+        getSurveys().then(response => {
             console.log(response.data);
             setSurveys(response.data);
         });
-    }, [value]);
+    }, []);
 
     const processSurvey = (survey: SurveyDataInfo) => {
-        history.push(`/survey/result/${survey.id}/${survey.permissionId}`);
+        history.push(`/handle/survey/${survey.permissionId}`);
     }
 
     surveyRef.current = surveys;
@@ -70,15 +65,6 @@ export default function ProfileComponent() {
                 width: 200
             },
             {
-                Header: 'Преподаватель',
-                accessor: (originalRow) => {
-                    return `${originalRow.teacher.lastName}. ${originalRow.teacher.firstName?.charAt(0)}. ${originalRow.teacher.patronymic?.charAt(0)}.`;
-                },
-                maxWidth: 200,
-                minWidth: 100,
-                width: 200
-            },
-            {
                 Header: '',
                 accessor: 'id',
                 Cell: (props) => {
@@ -91,7 +77,7 @@ export default function ProfileComponent() {
                                 color="secondary"
                                 onClick={() => processSurvey(surveyRef.current[rowIdx])}
                             >
-                                Пройти
+                                Результат
                             </Button>
                         </div>
                     );
@@ -128,24 +114,6 @@ export default function ProfileComponent() {
                         maxWidth: 1400,
                     }}
                 >
-                    <div className="list row ml-3">
-                        <div className="col-md-8">
-                            <FormControl component="fieldset">
-                                <FormLabel component="legend">Опросы</FormLabel>
-                                <RadioGroup
-                                    row
-                                    aria-label="surveyType"
-                                    name="controlled-radio-buttons-group"
-                                    value={value}
-                                    onChange={handleChange}
-                                >
-                                    <FormControlLabel value="done" control={<Radio/>} label="Пройденные"/>
-                                    <FormControlLabel value="await" control={<Radio/>} label="Не пройденные"/>
-                                </RadioGroup>
-                            </FormControl>
-                        </div>
-                    </div>
-
                     <div className="col-md-12 list">
                         <table
                             {...getTableProps()}
