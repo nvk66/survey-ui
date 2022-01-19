@@ -112,7 +112,7 @@ class App extends Component<Props, State> {
 
                 <div className="container mt-3">
                     <Switch>
-                        <Route exact path="/testLogin" component={SignIn}/>
+                        <Route exact path="/login" component={SignIn}/>
                         <Route exact path="/registration" component={Registration}/>
                         <Route exact path="/university" component={UniversityComponent}/>
                         <Route exact path="/group" component={GroupComponent}/>
