@@ -23,7 +23,7 @@ import ProfileComponent from "./component/profile/profile.component";
 import UserManagementComponent from "./component/manangement/user.management.component";
 import RoleBasedRouting from "./common/RoleBasedRouting";
 import InfoComponent from "./component/common/InfoComponent";
-import {Box, Container, Divider, Drawer, Link, List, ListItem, ListItemText} from "@mui/material";
+import {Box, Container, Divider, Drawer, Link, List, ListItem} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import TeacherProfileComponent from "./component/profile/teacher.profile.component";
@@ -69,14 +69,11 @@ export default function App() {
                 {roles?.includes("ROLE_ADMINISTRATOR") ? (
                     <>
                         <List>
-                            {['Университет'].map((text, index) => (
-                                <ListItem button key={text}>
-                                    <Link>
-
-                                    </Link>
-                                    <ListItemText primary={text}/>
-                                </ListItem>
-                            ))}
+                            <ListItem button key='Добавить университет'>
+                                <Link href="/university">
+                                    Добавить университет
+                                </Link>
+                            </ListItem>
                         </List>
                         <Divider/>
                     </>
@@ -103,6 +100,7 @@ export default function App() {
                                 </Link>
                             </ListItem>
                         </List>
+                        <Divider/>
                     </>
                 ) : (
                     <>
@@ -169,7 +167,7 @@ export default function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xl">
+            <Container component="main">
                 <CssBaseline/>
                 <div>
                     <Drawer

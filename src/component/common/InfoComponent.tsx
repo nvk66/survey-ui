@@ -3,7 +3,7 @@ import './not.found.css';
 
 const InfoComponent = () => (
     <div>
-        <p className="not-found"> Тут появится описание, но пока что его нет </p>
+        <p className="not-found"> Тема работы: сервис для оценки студентами преподавателей </p>
 
         <div className="tipsiz">
             <div className="tipsiz-body">
@@ -12,15 +12,15 @@ const InfoComponent = () => (
                     <div className="upper-face">
                         <div className="element">2</div>
                         <div className="element">0</div>
-                        <div className="element">4</div>
+                        <div className="element">0</div>
                     </div>
-                    <div className="mouth"/>
+                    <div className="mouthHappy"/>
                 </div>
                 <div className="right-arm arm"/>
             </div>
         </div>
 
-        <p>Но вы не грустите</p>
+        <p>Также была реализована возможность прохождения различных других опросов, их создание и администрирование</p>
 
     </div>
 );

@@ -1,10 +1,9 @@
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -18,7 +17,6 @@ import AuthService from "../../service/auth.service";
 import {useHistory} from "react-router-dom";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 import UniversityData from "../../types/universityData";
-import {useEffect, useState} from "react";
 import UniversityService from "../../service/university.service";
 
 const Copyright = (props: any) => {
@@ -181,12 +179,6 @@ export default function Registration() {
                                     id="password"
                                     autoComplete="new-password"
                                     color="secondary"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary"/>}
-                                    label="I want to receive inspiration, marketing promotions and updates via email."
                                 />
                             </Grid>
                         </Grid>

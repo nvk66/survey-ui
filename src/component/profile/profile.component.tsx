@@ -84,16 +84,19 @@ export default function ProfileComponent() {
                 Cell: (props) => {
                     const rowIdx = Number(props.row.id);
                     return (
-                        <div>
-                            <Button
-                                key="confirm"
-                                variant="contained"
-                                color="secondary"
-                                onClick={() => processSurvey(surveyRef.current[rowIdx])}
-                            >
-                                Пройти
-                            </Button>
-                        </div>
+                        value === 'done' ?
+                            <>
+                            </> :
+                            <div>
+                                <Button
+                                    key="confirm"
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => processSurvey(surveyRef.current[rowIdx])}
+                                >
+                                    Пройти
+                                </Button>
+                            </div>
                     );
                 },
                 maxWidth: 200,
@@ -101,7 +104,7 @@ export default function ProfileComponent() {
                 width: 200
             },
         ],
-        []
+        [value]
     );
 
     const {
@@ -117,7 +120,7 @@ export default function ProfileComponent() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xl">
                 <CssBaseline/>
                 <Box
                     sx={{

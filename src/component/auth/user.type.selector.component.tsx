@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {ChangeEvent, useEffect, useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import SchoolIcon from '@mui/icons-material/School';
@@ -9,23 +10,20 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import CopyrightComponent from "../common/copyright.component";
 import {useHistory} from "react-router-dom";
 import {
-    Autocomplete, createFilterOptions,
+    Autocomplete,
+    createFilterOptions,
     FormControl,
     InputLabel,
-    ListItemText,
     MenuItem,
-    OutlinedInput,
     Select,
     SelectChangeEvent
 } from "@mui/material";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
 import TeacherData from "../../types/teacherData";
 import PupilData from "../../types/pupilData";
 import TeacherService from "../../service/teacher.service";
@@ -99,6 +97,7 @@ export default function UserTypeSelectorComponent() {
         let pupil: PupilData | null = null;
 
         if (isTeacher) {
+            console.log("111")
             teacher = {
                 teachingDate: String(date?.toLocaleDateString()),
                 grade: grade,
@@ -119,6 +118,9 @@ export default function UserTypeSelectorComponent() {
                 recordBook: String(data.get('recordBook'))
             }
 
+            console.log("!!!")
+            console.log(groupVal?.id)
+
             addPupil(pupil, String(groupVal?.id)).then(response => {
                 // history.push('/survey');
             }).catch(e => {
@@ -129,7 +131,7 @@ export default function UserTypeSelectorComponent() {
         console.log(pupil);
 
         if (isTeacher || isPupil) {
-            history.push('/survey');
+            history.push('/surveys');
         }
     };
 
@@ -137,20 +139,11 @@ export default function UserTypeSelectorComponent() {
         setGrade(event.target.value as string);
     };
 
-    // const handleUniSelect = (event: SelectChangeEvent) => {
-    //     setUniversity(universities.find(uni => uni.id === Number(event.target.value)));
-    // }
-
-    // const handleGroupSelect = (event: SelectChangeEvent) => {
-    //     setGroupVal(groups.find(grou => grou.id === Number(event.target.value)));
-    // }
-
     const handleChange = (prop: any) => (event: ChangeEvent<HTMLInputElement>) => {
         prop === 'teacher' ? setTeacher(event.target.checked) : setPupil(event.target.checked);
     };
 
     const filterOptionsGroup = createFilterOptions({
-        // matchFrom: 'start',
         stringify: (option: GroupData) => `${option.guid} (${option.name})`,
     });
 
@@ -199,27 +192,6 @@ export default function UserTypeSelectorComponent() {
                                         color="secondary"
                                     />} label="Ученик"/>
                             </Grid>
-                            {/*<Grid item xs={12} sm={12}>*/}
-                            {/*    <FormControl fullWidth required color="secondary" margin="normal">*/}
-                            {/*        <InputLabel id="uniLabel">Университет</InputLabel>*/}
-                            {/*        <Select*/}
-                            {/*            labelId="uniLabel"*/}
-                            {/*            id="uni"*/}
-                            {/*            value={university ? String(university.id) : ''}*/}
-                            {/*            label={'Университет'}*/}
-                            {/*            onChange={handleUniSelect}*/}
-                            {/*        >*/}
-                            {/*            {universities.map((uni) => (*/}
-                            {/*                <MenuItem*/}
-                            {/*                    key={uni.id}*/}
-                            {/*                    value={String(uni.id)}*/}
-                            {/*                >*/}
-                            {/*                    {`${uni.guid} (${uni.name})`}*/}
-                            {/*                </MenuItem>*/}
-                            {/*            ))}*/}
-                            {/*        </Select>*/}
-                            {/*    </FormControl>*/}
-                            {/*</Grid>*/}
                             {isTeacher ? (
                                 <>
                                     <Grid item xs={12} sm={12}>

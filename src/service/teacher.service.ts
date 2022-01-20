@@ -1,16 +1,15 @@
 import teacherData from "../types/teacherData";
 import instance from "./api.service";
-import { generatePath } from "react-router"
-import TokenService from "./token.service";
+import {generatePath} from "react-router"
 
 const teacherPath = (universityId: any) => {
-    return generatePath('teacher/:universityId/', {
+    return generatePath('teacher/', {
         universityId: universityId,
     })
 }
 
 const add = (teacher: teacherData) => {
-    return instance.post<teacherData>(teacherPath(TokenService.getUser().universityId), teacher);
+    return instance.post<teacherData>('teacher/', teacher);
 }
 
 const getByUniversity = (universityId: any) => {

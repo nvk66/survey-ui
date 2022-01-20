@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {createTheme} from '@mui/material/styles';
 import CopyrightComponent from "../common/copyright.component";
 import {useHistory, useParams} from "react-router-dom";
 import Grid from "@mui/material/Grid";
@@ -54,7 +54,8 @@ const renderTitle = (course?: CourseData, survey?: SurveyData) => {
     if (survey?.type === 'SURVEY') {
         return (
             <Typography component="h1" variant="h5">
-                Пройти опрос «{survey?.name}» по предмету: «{course?.subject?.name}» c преподавателем: «{course?.teacher?.lastName} {course?.teacher?.firstName} {course?.teacher?.patronymic}»
+                Пройти опрос «{survey?.name}» по предмету: «{course?.subject?.name}» c преподавателем:
+                «{course?.teacher?.lastName} {course?.teacher?.firstName} {course?.teacher?.patronymic}»
             </Typography>
         );
     } else {
@@ -149,7 +150,7 @@ const renderAnswer = (question: QuestionData,
 
 export default function SurveyViewComponent() {
     const history = useHistory();
-    const { surveyId, permissionId } = useParams<{ surveyId: string, permissionId: string }>();
+    const {surveyId, permissionId} = useParams<{ surveyId: string, permissionId: string }>();
 
     const [survey, setSurvey] = useState<SurveyData>();
     const [course, setCourse] = useState<CourseData>()
@@ -208,15 +209,16 @@ export default function SurveyViewComponent() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
+        // <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xl">
                 <CssBaseline/>
                 <Box
                     sx={{
-                        marginTop: 8,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        overflow: "scroll",
+                        height: "600px",
                     }}
                 >
                     <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
@@ -230,9 +232,9 @@ export default function SurveyViewComponent() {
                                 renderQuestions(questions,
                                     categories,
                                     answers, (questionId, value, isValue) => {
-                                    isValue ?
-                                        (answers.filter(a => a.questionId === questionId)[0].value = Number(value)) :
-                                        (answers.filter(a => a.questionId === questionId)[0].text = String(value));
+                                        isValue ?
+                                            (answers.filter(a => a.questionId === questionId)[0].value = Number(value)) :
+                                            (answers.filter(a => a.questionId === questionId)[0].text = String(value));
                                     })
                             }
                         </Grid>
@@ -249,6 +251,6 @@ export default function SurveyViewComponent() {
                 </Box>
                 <Copyright sx={{mt: 8, mb: 4}}/>
             </Container>
-        </ThemeProvider>
+        // </ThemeProvider>
     );
 }
