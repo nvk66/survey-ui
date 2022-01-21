@@ -63,7 +63,7 @@ export default function SignIn() {
                     } else if (roles.roles?.includes("ROLE_TEACHER")) {
                         history.push("/rating");
                     } else if (roles.roles?.includes("ROLE_ADMINISTRATOR")) {
-                        history.push("/users");
+                        history.push("/users/management");
                     }
                 }
             },

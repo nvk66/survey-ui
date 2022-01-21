@@ -1,7 +1,7 @@
 import instance from "./api.service";
 import UserData from "../types/userData";
 
-const userPath = '/api/users/'
+const userPath = '/users/'
 
 const get = (request: string) => {
     return instance.get<{

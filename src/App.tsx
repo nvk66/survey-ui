@@ -27,6 +27,7 @@ import {Box, Container, Divider, Drawer, Link, List, ListItem} from "@mui/materi
 import CssBaseline from "@mui/material/CssBaseline";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import TeacherProfileComponent from "./component/profile/teacher.profile.component";
+import ResultComponent from "./component/profile/result.component";
 
 export default function App() {
 
@@ -304,13 +305,13 @@ export default function App() {
                             />
                             <RoleBasedRouting
                                 Component={TeacherProfileComponent}
-                                path="teacher/surveys"
+                                path="/teacher/surveys"
                                 requiredRoles="ROLE_TEACHER"
                                 exact={true}
                             />
                             <RoleBasedRouting
-                                Component={TeacherProfileComponent}
-                                path="/survey/result/:surveyId/:permission"
+                                Component={ResultComponent}
+                                path="/survey/result/:permissionId"
                                 requiredRoles="ROLE_TEACHER"
                                 exact={true}
                             />

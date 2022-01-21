@@ -35,7 +35,7 @@ export default function TeacherProfileComponent() {
     }, []);
 
     const processSurvey = (survey: SurveyDataInfo) => {
-        history.push(`/handle/survey/${survey.permissionId}`);
+        history.push(`/survey/result/${survey.permissionId}`);
     }
 
     surveyRef.current = surveys;

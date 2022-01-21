@@ -25,7 +25,7 @@ const getSurveysForTeacher = () => {
 }
 
 const getResult = (permissionId: any) => {
-    return instance.get<ResultData[]>(generatePath('surveys/:permissionId/', {
+    return instance.get<ResultData[]>(generatePath('surveys/result/:permissionId/', {
         permissionId: permissionId,
     }));
 }

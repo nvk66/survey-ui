@@ -50,7 +50,7 @@ export default function ResultComponent() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Container component="main" maxWidth="xs">
+            <Container component="main" maxWidth="xl">
                 <CssBaseline/>
                 <Box
                     sx={{
@@ -58,6 +58,8 @@ export default function ResultComponent() {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        overflow: "scroll",
+                        height: "600px"
                     }}
                 >
                     {renderResult(result)}
